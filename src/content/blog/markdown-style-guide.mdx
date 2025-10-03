@@ -1,0 +1,52 @@
+---
+title: "Building Resend MCP-UI Server"
+description: "Enhancing the Resend MCP Server with MCP-UI client and server SDKs"
+pubDate: "Oct. 01 2025"
+heroImage: "../../assets/resend-mcp-ui.png"
+---
+
+I recently participated in the [Resend MCP Hackathon](https://resend.com/blog/resend-mcp-hackathon), and I’m excited to share the project I worked on: **ResendUI MCP Server & Client**.
+
+ResendUI is an **MCP-UI server** that enhances the existing Resend MCP server. Its purpose is simple: make sending emails through AI chatbots more intuitive and user-friendly. Instead of relying on long and frustrating prompts, ResendUI provides a **rich text editor** with interactive UI components.
+
+Repo url: [https://github.com/HichamELBSI/resend-ui-mcp-server](https://github.com/HichamELBSI/resend-ui-mcp-server) 
+
+<div>
+  <iframe
+    class="video"
+    src="https://www.youtube.com/embed/krlBkwLlajc"
+    title="Building Resend MCP-UI Server"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  ></iframe>
+</div>
+
+## Why ResendUI MCP?
+
+AI chatbots are powerful, but when it comes to structured actions like sending emails, prompts can quickly feel limiting. Writing HTML or carefully formatted text by hand isn’t the most natural way to work. With ResendUI, the workflow becomes much smoother: it can automatically prefill data from your prompt, let you compose and format emails directly in a rich text editor, add HTML and metadata in a structured way, and then send everything seamlessly through the Resend MCP server.
+
+## How it Works
+
+When combining the **Resend** and **ResendUI** MCP servers, the process is straightforward:
+
+1. If you ask the chatbot to send an email, ResendUI MCP intercepts the request (done with a system prompt).
+2. A UI component appears with prefilled data from the prompt (thanks to the MCP schema) letting you format your email (HTML, subject line, recipients, etc.).
+3. Once you click _Send email_, ResendUI MCP calls the native Resend MCP tool to handle the actual delivery.
+
+This approach allows users to focus on the **content** of their email rather than the mechanics of writing prompts.
+
+## Technical Explanation
+
+Below are how the ResendUI MCP server and client are structured:
+
+### Server 
+  - Create the UI resource (A form with inputs and a rich email editor react component) using `createUIResource()` (this resource will be rendered as an iframe in the host client).
+  - Create the UI component and handle **data** (get the data object from the prompt thanks to the MCP schema and init the form with it) and **user interactions** (call `send-email` tool provided by Resend MCP server) by listening and sending messages to the parent window (the host client).
+### Client
+  - Render that resource using `<UIResourceRenderer />` (natively done by Nanobot in my demo but you can do it yourself if you are building your own client).
+  - This means that you can use ResendUI MCP Server with any client that supports it (Nanobot, LibreChat, GooseAI, etc.).
+
+## The Bigger Picture
+
+While email is a great first use case, the potential of MCP-UI extends much further. By bringing interactive UI elements into chat-driven workflows, we can unlock more intuitive and productive ways to work with AI.
+
+ResendUI MCP is just a starting point, but it highlights how chat-based tools can become even more powerful when paired with user-friendly UI components. I clearly see that MCP-UI implementation natively integrated to the Resend MCP server.
